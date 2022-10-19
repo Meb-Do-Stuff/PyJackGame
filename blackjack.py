@@ -5,6 +5,7 @@ import typing
 class BlackJackGame:
     def __init__(self, nbr_jrs: int = 2):
         self.cards_remaining = 0
+        self.tour = 1
         self.nbr_jrs = nbr_jrs
         self.j_cards = self.cartes_dispos = self.players_result = None
 
@@ -16,6 +17,7 @@ class BlackJackGame:
         """
         Réinitialise la partie et remet tous les compteurs à 0.
         """
+        self.tour = 1
         self.j_cards = {}
         self.players_result = {}
         self.cartes_dispos = {"Piques": self.default_cards, "Carreaux": self.default_cards,
@@ -32,6 +34,7 @@ class BlackJackGame:
         Passer au prochain tour.\n
         Ne retourne rien.
         """
+        self.tour += 1
         for jrs in list(self.j_cards.keys()):
 
             for exp in list(self.cartes_dispos):  # Vérifie s'il y a toujours des cartes dans le paquet.
@@ -46,7 +49,10 @@ class BlackJackGame:
             card = random.choice(self.cartes_dispos[exp])
             self.j_cards[jrs].append({exp: card})
             self.cartes_dispos[exp].remove(card)
-            print(f"Joueur {jrs} a récupéré un {card} de {exp}")
+            if jrs == 0:
+                print(f"Joueur {jrs} a récupéré un {card} de {exp}.")
+            else:
+                print(f"Joueur {jrs} a récupéré une carte.")
             if len(card) <= 2 and card != "As":  # Ajoute le score des cartes
                 self.players_result[jrs] += int(card)
             elif len(card) >= 3:
@@ -57,7 +63,8 @@ class BlackJackGame:
                     as_response = as_function(jrs)
                 self.players_result[jrs] += as_response
 
-            print(f"Joueur {jrs} avez {self.j_cards[jrs]}")
+            if jrs == 0:
+                print(f"Joueur {jrs} avez {self.j_cards[jrs]}")
 
         for player in list(self.j_cards.keys()):  # Vérifie si un joueur est éliminé / s'il veut se retirer.
             if self.players_result[player] > 21:
@@ -70,6 +77,7 @@ class BlackJackGame:
                     self.j_cards.pop(player)
 
         self.cards_remaining = len(list(self.j_cards.keys()))
+        print(f"Tour {self.tour}")
 
     def get_score(self):
         """
@@ -82,7 +90,12 @@ class BlackJackGame:
         """
         winners = []
         looser = []
-        for player in list(self.players_result.keys()):
+        print(self.players_result)
+        for player in self.players_result:  # Change les joueurs au score supérieur à 21.
+            if self.players_result[player] > 21:
+                self.players_result[player] = 0
+
+        for player in list(self.players_result.keys()):  # Trouve les gagnants / Perdants
             if self.players_result[player] == max(list(self.players_result.values())) and \
                     self.players_result[player] <= 21:
                 winners.append(player)
@@ -93,24 +106,41 @@ class BlackJackGame:
 
 if "__main__" == __name__:
     """
-    DEBUG
+    LANCER LE JEU
     """
 
-    game = BlackJackGame()
-
+    game = BlackJackGame(int(input("Combien de joueurs?: ")))
+    print("Vous êtes joueur 0.")
 
     def as_test(joueur):
-        print('AS', joueur)
-        return 1
+        if joueur == 0:
+            while True:
+                choice = input("Voulez vous l'utiliser comme 1 ou 11?: ")
+                if choice.isnumeric() and (int(choice) == 1 or int(choice) == 11):
+                    return int(choice)
+        else:
+            if game.players_result[joueur] >= 10:
+                return 11
+            else:
+                return 1
 
 
     def stop_test(joueur):
-        print('Stop?', joueur)
-        print(game.j_cards)
-        return False
+        if joueur == 0:
+            while True:
+                choice = str.upper(input("Voulez vous vous arrêter?(O/N): "))
+                if choice == "O" or choice == "N":
+                    if choice == "O":
+                        return True
+                    else:
+                        return False
+        else:
+            if game.players_result[joueur] > 17:
+                return False
+            else:
+                print(f"{joueur} s'est arrêté.")
+                return True
 
-
-    print(game.cards_remaining)
     while game.cards_remaining > 0:
         game.next_round(as_test, stop_test)
-    print(game.get_score())
+    print(f"Gagnants: joueur {game.get_score()[0]}, perdants: joueurs {game.get_score()[1]}")
