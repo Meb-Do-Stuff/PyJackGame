@@ -1,13 +1,9 @@
-import os
 from pygame_button import Button
 import pygame
 import pygame_textinput
-import sys
-from math import *
+import textwrap
 from pygame.locals import *
-
 import blackjack
-from blackjack import BlackJackGame
 from interface import Display, Cartes
 
 game_running = True
@@ -158,6 +154,10 @@ if "__main__" == __name__:
     button_ok.process_kwargs({"text": display.small_font.render("Tour suivant", False, (255, 255, 255)),
                               "hover_color": (200, 200, 200)})
 
+    button_rematch = Button((display.w / 2.1, display.h / 1.8, 190, 60), (150, 150, 150), lambda a: a)
+    button_rematch.process_kwargs({"text": display.small_font.render("Rejouer?", False, (255, 255, 255)),
+                                   "hover_color": (200, 200, 200)})
+
     while True:
         display.board()
 
@@ -171,19 +171,59 @@ if "__main__" == __name__:
                                         (players_pos[ply_cards][0] + nbr * 20, players_pos[ply_cards][1]))
         for x in range(game.cards_remaining):
             display.screen.blit(cartes.cards["Reversed"][1],
-                                (display.w / 3 - cartes.cards["Reversed"][1].get_rect()[0] / 2.3 + x * 3,
+                                (display.w / 2.2 - cartes.cards["Reversed"][1].get_rect()[0] / 2.3 + x * 3,
                                  display.h / 2.7 - cartes.cards["Reversed"][1].get_rect()[1] / 2))
         display.screen.blit(display.small_font.render("Vous:", False, (255, 255, 255)),
                             (players_pos[0][0], players_pos[0][1] - 35))
 
         if game.cards_remaining == 0 or game.j_cards == {}:
+            winners, losers = game.get_score()
+
             reveal = True
             pygame.draw.rect(display.screen, (100, 100, 100),
-                             (display.w / 3.6, display.h / 4.1, display.w / 1.935, display.h / 2.9))
+                             (display.w / 2.9, display.h / 3.1, display.w / 1.935, display.h / 2.9))
             pygame.draw.rect(display.screen, (150, 150, 150),
-                             (display.w / 3.5, display.h / 4, display.w / 2, display.h / 3))
+                             (display.w / 2.85, display.h / 3.05, display.w / 2, display.h / 3))
             display.screen.blit(display.default_font.render("Terminé!", True, (255, 255, 255)),
                                 (display.w / 2, display.h / 4))
+            print(winners, losers)
+            if len(winners) > 1:
+                display.screen.blit(display.small_font.render("Gagnants:", False, (255, 255, 255)),
+                                    (display.w / 2.6, display.h / 2.8))
+            elif len(winners) == 1:
+                display.screen.blit(display.small_font.render("Gagnant:", False, (255, 255, 255)),
+                                    (display.w / 2.6, display.h / 2.8))
+            if len(losers) > 1:
+                display.screen.blit(display.small_font.render("Perdants:", False, (255, 255, 255)),
+                                    (display.w / 2.6, display.h / 2.4))
+            elif len(losers) == 1:
+                display.screen.blit(display.small_font.render("Perdants:", False, (255, 255, 255)),
+                                    (display.w / 2.6, display.h / 2.4))
+
+            if 0 in winners:
+                winners.remove(0)
+                winners.append("0 (vous)")
+            if 0 in losers:
+                losers.remove(0)
+                losers.append("0 (vous)")
+            winner_str = "".join(
+                [f"Joueur {y} " if len(winners) == 1 or x + 1 == len(winners) else f"Joueur {y} et " if 1 < len(
+                    winners) != x + 1 else print() for x, y in enumerate(winners)])
+            display.screen.blit(display.ultra_small_font.render(winner_str, False, (255, 255, 255)),
+                                (display.w / 2.6, display.h / 2.6))
+
+            losers_str = textwrap.fill("".join([f"Joueur {y} " if len(losers) == 1 or x + 1 == len(
+                losers) else f"Joueur {y} et " if 1 < len(losers) != x + 1 else print() for x, y in enumerate(losers)]),
+                                       35)
+            losers_str = losers_str.split("\n")
+
+            for y, text in enumerate(sorted(losers_str, reverse=True)):
+                print(text)
+                display.screen.blit(display.ultra_small_font.render(text, 35, False, (255, 255, 255)),
+                                    (display.w / 2.6, display.h / 2.05 - y * 20))
+
+            button_rematch.update(display.screen)
+
         else:
             button_ok.update(display.screen)
             if ok:
@@ -196,3 +236,7 @@ if "__main__" == __name__:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if button_ok.rect.collidepoint(event.pos):
                     ok = True
+                if button_rematch.rect.collidepoint(event.pos) and (game.cards_remaining == 0 or game.j_cards == {}):
+                    game.reset_cards()
+                    ok = True
+                    reveal = False

@@ -64,6 +64,7 @@ class Display:
         Met le fond en mode plateau de jeu.
         """
         self.screen.fill((0, 110, 0), (0, 0, self.h, self.w))
+        self.screen.blit(self.ultra_small_font.render("Pressez Echap pour quitter", True, (0, 100, 0)), (0, 0))
 
     def update(self):
         """
@@ -76,6 +77,6 @@ class Display:
         pygame.display.flip()
 
         self.pg_events = pygame.event.get()
-        for event in pygame.event.get():
+        for event in self.pg_events:
             if event.type == QUIT or (event.type == KEYDOWN and event.key == pygame.K_ESCAPE):  # Quit
                 sys.exit()

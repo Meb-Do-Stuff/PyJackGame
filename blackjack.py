@@ -102,7 +102,7 @@ class BlackJackGame:
         """
         winners = []
         looser = []
-        print(self.players_result)
+        # print(self.players_result)
         for player in self.players_result:  # Change les joueurs au score supérieur à 21.
             if self.players_result[player] > 21:
                 self.players_result[player] = 0
