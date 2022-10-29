@@ -4,6 +4,7 @@ import typing
 
 class BlackJackGame:
     def __init__(self, nbr_jrs: int = 2):
+        self.j_perm_cards = {}
         self.cards_remaining = 0
         self.tour = 1
         self.nbr_jrs = nbr_jrs
@@ -19,13 +20,17 @@ class BlackJackGame:
         """
         self.tour = 1
         self.j_cards = {}
+        self.j_perm_cards = {}
         self.players_result = {}
-        self.cartes_dispos = {"Piques": self.default_cards, "Carreaux": self.default_cards,
-                              "Coeurs": self.default_cards, "Trèfles": self.default_cards}
+        self.cartes_dispos = {"Piques": self.default_cards[0:len(self.default_cards)], "Carreaux": self.default_cards[0:len(self.default_cards)],
+                              "Coeurs": self.default_cards[0:len(self.default_cards)], "Trèfles": self.default_cards[0:len(self.default_cards)]}
         for jrs in range(self.nbr_jrs):
             self.players_result[jrs] = 0
             self.j_cards[jrs] = []
-        self.cards_remaining = len(list(self.j_cards.keys()))
+            self.j_perm_cards[jrs] = []
+        self.cards_remaining = 0
+        for cards in self.cartes_dispos:
+            self.cards_remaining += len(self.cartes_dispos[cards])
 
     def next_round(self, as_function: typing.Callable, retire_function: typing.Callable):
         """
@@ -41,18 +46,22 @@ class BlackJackGame:
                 if self.cartes_dispos[exp] == []:
                     self.cartes_dispos.pop(exp)
             if self.cartes_dispos == {}:
-                print('Plus de cartes dans le paquet')
+                # print('Plus de cartes dans le paquet')
                 self.j_cards.clear()
                 return "Cards limit reach"
 
             exp = random.choice(list(self.cartes_dispos.keys()))  # Donne une carte au joueur
             card = random.choice(self.cartes_dispos[exp])
+
             self.j_cards[jrs].append({exp: card})
+            self.j_perm_cards[jrs].append({exp: card})
             self.cartes_dispos[exp].remove(card)
             if jrs == 0:
-                print(f"Joueur {jrs} a récupéré un {card} de {exp}.")
+                pass
+                # print(f"Joueur {jrs} a récupéré un {card} de {exp}.")
             else:
-                print(f"Joueur {jrs} a récupéré une carte.")
+                pass
+                # print(f"Joueur {jrs} a récupéré une carte.")
             if len(card) <= 2 and card != "As":  # Ajoute le score des cartes
                 self.players_result[jrs] += int(card)
             elif len(card) >= 3:
@@ -64,7 +73,8 @@ class BlackJackGame:
                 self.players_result[jrs] += as_response
 
             if jrs == 0:
-                print(f"Joueur {jrs} avez {self.j_cards[jrs]}")
+                pass
+                # print(f"Joueur {jrs} avez {self.j_cards[jrs]}")
 
         for player in list(self.j_cards.keys()):  # Vérifie si un joueur est éliminé / s'il veut se retirer.
             if self.players_result[player] > 21:
@@ -76,8 +86,10 @@ class BlackJackGame:
                 if response is True:
                     self.j_cards.pop(player)
 
-        self.cards_remaining = len(list(self.j_cards.keys()))
-        print(f"Tour {self.tour}")
+        self.cards_remaining = 0
+        for cards in self.cartes_dispos:
+            self.cards_remaining += len(self.cartes_dispos[cards])
+        # print(f"Tour {self.tour}")
 
     def get_score(self):
         """
@@ -112,6 +124,7 @@ if "__main__" == __name__:
     game = BlackJackGame(int(input("Combien de joueurs?: ")))
     print("Vous êtes joueur 0.")
 
+
     def as_test(joueur):
         if joueur == 0:
             while True:
@@ -138,8 +151,9 @@ if "__main__" == __name__:
             if game.players_result[joueur] > 17:
                 return False
             else:
-                print(f"{joueur} s'est arrêté.")
+                # print(f"{joueur} s'est arrêté.")
                 return True
+
 
     while game.cards_remaining > 0:
         game.next_round(as_test, stop_test)
