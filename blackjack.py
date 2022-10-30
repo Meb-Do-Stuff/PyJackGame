@@ -34,8 +34,8 @@ class BlackJackGame:
 
     def next_round(self, as_function: typing.Callable, retire_function: typing.Callable):
         """
-        :param as_function: Créer une fonction dans le cas où le joueur doit effectuer un choix quand à un AS. Doit prendre un argument 'joueur' pour savoir quel est le joueur concerné.
-        :param retire_function: Créer une fonction dans le cas où le joueur doit effectuer un choix s'il veut se retirer de la partie (après avoir un score suppérieur ou égale à 16). Doit prendre un argument 'joueur' pour savoir quel est le joueur concerné.
+        :param as_function: Créer une fonction dans le cas où le joueur doit effectuer un choix quant à un AS. Doit prendre un argument 'joueur' pour savoir quel est le joueur concerné.
+        :param retire_function: Créer une fonction dans le cas où le joueur doit effectuer un choix s'il veut se retirer de la partie (après avoir un score supérieur ou égale à 16). Doit prendre un argument 'joueur' pour savoir quel est le joueur concerné.
         Passer au prochain tour.\n
         Ne retourne rien.
         """

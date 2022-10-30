@@ -3,11 +3,13 @@ import os
 import math
 import pygame
 from pygame.locals import *
-from pygame_button import Button
 
 
 class Cartes:
     def __init__(self):
+        """
+        Initialise l'objet Cartes.
+        """
         self.cards = {"Reversed": [pygame.transform.smoothscale(pygame.image.load(r"cartes\Reversed.png"), (112, 163)),
                                    pygame.image.load(r"cartes\Reversed.png")]}
         for card_dir in (x for x in os.listdir("cartes") if x != "Reversed.png"):
