@@ -1,8 +1,7 @@
 # <u>PyJackGame</u>
-[<b>GitHub</b>](https://github.com/MeblIkea/PyJackGame)
-<br>
-Pour directement jouer au jeu, allez voir dans les [<b>Releases</b>](https://github.com/MeblIkea/PyJackGame/releases/latest)
-Si vous avez des questions, vous pouvez me contacter sur Discord (Meb#2325).
+[<b>GitHub</b>](https://github.com/MeblIkea/PyJackGame)<br>
+Pour directement jouer au jeu, allez voir dans les [<b>Releases</b>](https://github.com/MeblIkea/PyJackGame/releases/latest)<br>
+Si vous avez des questions, vous pouvez me contacter sur Discord (<b>Meb#2325</b>).
 ##
 
 ### Modules:
