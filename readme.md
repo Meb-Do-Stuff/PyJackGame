@@ -62,3 +62,5 @@ main # Lance le jeu
 ```
 
 Dans le code, toutes les fonctions sont commentées, pour que ce soit le plus simple à lire et re-utiliser.
+
+<i>Si vous voulez essayer la version console, changer de branche (mais due aux différences de commit, elle a surement des problèmes (car pas à jour)).</i>
