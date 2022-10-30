@@ -25,14 +25,9 @@ class Cartes:
         :param multi: Éloigne le point du centre (avant arrondir).
         :param centre: Point du centre (pour centrer).
         :return: Position X et Y du point.
+        Calcule la position de la carte.
         """
         return round(math.cos(rad) * multi + centre[0]), round(math.sin(rad) * multi + centre[1])
-
-    def update(self):
-        """
-        Actualise l'affichage des cartes.
-        """
-        pass
 
 
 class Display:
@@ -51,7 +46,7 @@ class Display:
         self.default_font = pygame.font.SysFont("Arial Bold", 55)
         self.huge_font = pygame.font.SysFont("Arial Bold", 100)
 
-        self.error = ""
+        self.error = ""  # Pour afficher une erreur
 
         pygame.display.set_caption("PyJack")
 
