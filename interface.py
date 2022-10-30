@@ -12,7 +12,7 @@ class Cartes:
         """
         self.cards = {"Reversed": [pygame.transform.smoothscale(pygame.image.load(r"cartes\Reversed.png"), (112, 163)),
                                    pygame.image.load(r"cartes\Reversed.png")]}
-        for card_dir in (x for x in os.listdir("cartes") if x != "Reversed.png"):
+        for card_dir in (x for x in os.listdir("cartes") if (x != "Reversed.png" and x != "icon.ico")):
             self.cards[card_dir] = {}
             for card in os.listdir(rf"cartes/{card_dir}"):
                 self.cards[card_dir][card.split(".")[0]] = pygame.transform.smoothscale(
@@ -48,7 +48,8 @@ class Display:
 
         self.error = ""  # Pour afficher une erreur
 
-        pygame.display.set_caption("PyJack")
+        pygame.display.set_caption("PyJackGame")
+        pygame.display.set_icon(pygame.image.load(r"cartes/icon.ico"))
 
     def reset_error(self):
         """
