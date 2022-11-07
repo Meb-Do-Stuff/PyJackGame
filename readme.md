@@ -61,6 +61,8 @@ retire_func() # Fonction qui demande au joueur si il veux s'arrêter si il à pl
 main # Lance le jeu
 ```
 
+![image](https://cdn.discordapp.com/attachments/885117890884423710/1039263503292305489/Sans_tiaaatre.png)
+
 Dans le code, toutes les fonctions sont commentées, pour que ce soit le plus simple à lire et re-utiliser.
 
 <i>Si vous voulez essayer la version console, changer de branche (mais due aux différences de commit, elle a surement des problèmes (car pas à jour)).</i>
